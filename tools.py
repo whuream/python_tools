@@ -3,8 +3,9 @@ __author__ = 'tong'
 
 import traceback
 import json
-import eventlet
 import subprocess
+
+import eventlet
 
 eventlet.monkey_patch()
 
@@ -57,11 +58,26 @@ def exec_command(cmd):
     return subprocess.Popen(cmd, shell=True)
 
 
+def safe_get(d, l, default=None):
+    ret = d
+    try:
+        for i in l:
+            ret = ret.get(i)
+    except:
+        return default
+    return ret
+
+
 if __name__ == '__main__':
     def test(a):
         print(a)
 
+
     auto_retry(test, 1)
     time_limit(test, 2)
 
-    exec_command("ls -al")
+    # exec_command("ls -al")
+
+    d = {'a': {'b': 1}}
+
+    print(safe_get(d, ['a', 'b', 'c'], 'a'))
